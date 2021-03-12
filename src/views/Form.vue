@@ -2,7 +2,7 @@
   <div class="container"> 
         <h1 class="header">Форма подачи заявки в отдел сервиса и качества</h1>
         <div class="formContainer">
-            <form name="rnd" id="rnd">
+            <form @submit="submitForm" name="rnd" id="rnd">
                 <div class="formBlock">
                     <span class="formHeader mustHave">Ваш филиал</span>
                     <div class="selectCity">
@@ -79,6 +79,19 @@ export default {
 
   components: {
   },
+  
+  //Запрашиваем города
+  created: function() {
+        var vm = this;
+        fetch("https://60254fac36244d001797bfe8.mockapi.io/api/v1/city")
+        .then(function(response) {
+            return response.json();
+            })
+        .then(function(data) {
+            vm.cities = data;
+            })
+        
+  },
 
   methods: {
     //Выкл выбор города
@@ -112,6 +125,29 @@ export default {
             } else {
                 this.disabledSub = true;
             }
+    },
+
+    //Отправка формы
+    
+    submitForm: async function (e) {
+        e.preventDefault();
+        let response = await fetch('https://60254fac36244d001797bfe8.mockapi.io/api/v1/send-form', {
+        method: 'POST',
+        body: new FormData(document.getElementById('rnd'))
+        });
+        let result = await response.json();
+        if (result.success) {
+            this.selectInput = '';
+            this.disabledCity = false;
+            this.online = '';
+            this.radioButt = '';
+            this.otherTheme = '';
+            this.problem = "";
+            this.disabledSub = true;
+            alert('basdf')
+        } else {
+            alert("Ошибка отправки заявки");
+        }
     },
 
     //Показать модалку
