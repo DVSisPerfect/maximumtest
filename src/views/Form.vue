@@ -2,7 +2,7 @@
   <div class="container"> 
         <h1 class="header">Форма подачи заявки в отдел сервиса и качества</h1>
         <div class="formContainer">
-            <form @submit="submitForm" name="rnd" id="rnd">
+            <form @submit="submitForm" id="rnd">
                 <div class="formBlock">
                     <span class="formHeader mustHave">Ваш филиал</span>
                     <div class="selectCity">
@@ -51,11 +51,11 @@
                 </div>
             </form>
         </div>
-        <div id="modal">
-            <img src="success_img.png" id="gucci">
-            <button id="remove-button" @click="hideModal">X</button>
-        </div>
-    </div>
+            <div id="modal">
+                <img src="../assets/success_img.png" id="gucci">
+                <button id="remove-button" @click="hideModal()">X</button>
+            </div>
+     </div>
 </template>
 
 <script>
@@ -77,9 +77,6 @@ export default {
       }
   },
 
-  components: {
-  },
-  
   //Запрашиваем города
   created: function() {
         var vm = this;
@@ -143,10 +140,11 @@ export default {
             this.radioButt = '';
             this.otherTheme = '';
             this.problem = "";
-            this.disabledSub = true;
-            alert('basdf')
+            this.disabledSub = true;          
+            this.showModal();
         } else {
             alert("Ошибка отправки заявки");
+            
         }
     },
 
@@ -157,14 +155,14 @@ export default {
         modal.style.display = "block";
         modal.style.top = document.documentElement.clientHeight/2 - img.height/2 + "px";
         modal.style.left = document.documentElement.clientWidth/2 - img.width/2 + "px";
-        showCover();
+        this.showCover();
     },
 
     //Убрать модалку
     hideModal: function () {
         let modal = document.getElementById("modal");
         modal.style.display = "none";
-        hideCover();
+        this.hideCover();
     },
 
     //Фон для модалки
@@ -181,6 +179,7 @@ export default {
         document.body.style.overflowY = '';
     },
     },
+    
 }
 </script>
 
@@ -313,6 +312,8 @@ input[type="submit"]:enabled {
     z-index: 9999;
     background-color: white;
     padding: 10px;
+    top: var(--modal-top);
+    left: var(--modal-left);
     display: none;
 }
 
