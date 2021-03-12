@@ -6,7 +6,7 @@
                 <div class="formBlock">
                     <span class="formHeader mustHave">Ваш филиал</span>
                     <div class="selectCity">
-                        <select class="selectInput" id="selectInput" v-model="selectInput" :disabled='disabledCity'>
+                        <select class="selectInput" id="selectInput" v-model="selectInput" :disabled='disabledCity' @click="checkForm()">
                             <option disabled value='' hidden>Выберите свой город</option>
                             <option v-for="city in cities" v-bind:key="city.id">{{city.title}}</option>
                         </select>
@@ -93,6 +93,7 @@ export default {
   methods: {
     //Выкл выбор города
     disableCity : function () {
+        this.selectInput = '';
         this.disabledCity = !this.disabledCity;
     },
     
