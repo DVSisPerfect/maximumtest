@@ -1,7 +1,7 @@
 <template>
   <div class="submitted">
     <div id="modal" :style="cssVars">
-      <img src="../assets/success_img.png">
+      <img src="../assets/success_img.png" ref="img">
       <button id="remove-button" @click="goBack">X</button>
     </div>
     <div id="cover-div"></div>
@@ -12,6 +12,12 @@
 export default {
   name: 'Submitted',
 
+data: function () {
+  return {
+    height: '',
+  }
+},
+
 computed: {
     cssVars() {
       return {
@@ -21,10 +27,21 @@ computed: {
     }
   },
 
+mounted: function () {
+  this.$nextTick(function () {
+    this.matchHeight();
+    alert(this.height)
+  })
+},
+
 methods: {
   goBack: function () {
     this.$router.go(-1)
-  }
+  },
+  
+  matchHeight () {
+   this.height = this.$refs.img.clientHeight;
+ }
 }
 }
 </script>
