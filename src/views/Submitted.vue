@@ -21,8 +21,8 @@ data: function () {
 computed: {
     cssVars() {
       return {
-        '--modal-top': document.documentElement.clientHeight/2 - 75 + 'px',
-        '--modal-left': document.documentElement.clientWidth/2 - 125 + 'px'
+        '--modal-top': window.innerHeight/2 - 75 + 'px',
+        '--modal-left': window.innerWidth/2 - 125 + 'px'
       }
     }
   },
