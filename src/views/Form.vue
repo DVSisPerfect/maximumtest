@@ -18,22 +18,10 @@
                 </div>
                 <div class="formBlock">
                     <span class="formHeader mustHave">Тема обращения</span>
-                    <div class="radioBlock">
-                        <input class="radioInput" type="radio" id="badService" v-model="radioButt" value="badService" @click="checkForm();clearTheme()">
-                        <label for="badService">Недоволен качеством услуг</label>
-                    </div>
-                    <div class="radioBlock">
-                        <input class="radioInput" type="radio" id="termination" v-model="radioButt" value="termination" @click="checkForm();clearTheme()">
-                        <label for="termination">Расторжение договора</label>
-                    </div>
-                    <div class="radioBlock">
-                        <input class="radioInput" type="radio" id="noLetter" v-model="radioButt" value="noLetter" @click="checkForm();clearTheme()">
-                        <label for="noLetter">Не приходит письмо активации на почту</label>
-                    </div>
-                    <div class="radioBlock">
-                        <input class="radioInput" type="radio" id="noCab" v-model="radioButt" value="noCab" @click="checkForm();clearTheme()">
-                        <label for="noCab">Не работает личный кабинет</label>
-                    </div>
+                    <div class="radioBlock" v-for="button in radioButtons" :key="button.value">
+                        <input class="radioInput" type="radio" :value="button.value" v-model="radioButt" @change="checkForm()" @click="clearTheme()">
+                        <label :for="button.value">{{button.text}}</label>
+                    </div>                   
                     <input class="textInput textRadio" type="text" v-model="otherTheme"  placeholder="Другое" @keyup="checkForm();clearRadio()">
                 </div>
                 <div class="formBlock">
@@ -51,10 +39,6 @@
                 </div>
             </form>
         </div>
-            <div id="modal">
-                <img src="../assets/success_img.png" id="gucci">
-                <button id="remove-button" @click="hideModal()">X</button>
-            </div>
      </div>
 </template>
 
@@ -70,6 +54,12 @@ export default {
         selectInput: '',
         online: '',
         radioButt: '',
+        radioButtons: [
+            {value: 'badService', text: 'Недоволен качеством услуг'},
+            {value: 'termination', text: 'Расторжение договора'},
+            {value: 'noLetter', text: 'Не приходит письмо активации на почту'},
+            {value: 'noCab', text: 'Не работает личный кабинет'},
+        ],
         otherTheme: '',
         problem: '',
         message: "Приложите, пожалуйста, экранный скриншот<br>Это поможет быстрее решить проблему.",
@@ -141,44 +131,14 @@ export default {
             this.radioButt = '';
             this.otherTheme = '';
             this.problem = "";
-            this.disabledSub = true;          
-            this.showModal();
+            this.disabledSub = true;
+            this.show = true;
+            this.$router.push('submitted');
         } else {
             alert("Ошибка отправки заявки");
-            
         }
     },
-
-    //Показать модалку
-    showModal: function () {
-        let modal = document.getElementById("modal");
-        let img = document.getElementById("gucci");
-        modal.style.display = "block";
-        modal.style.top = document.documentElement.clientHeight/2 - img.height/2 + "px";
-        modal.style.left = document.documentElement.clientWidth/2 - img.width/2 + "px";
-        this.showCover();
-    },
-
-    //Убрать модалку
-    hideModal: function () {
-        let modal = document.getElementById("modal");
-        modal.style.display = "none";
-        this.hideCover();
-    },
-
-    //Фон для модалки
-    showCover: function () {
-        let coverDiv = document.createElement('div');
-        coverDiv.id = 'cover-div';
-        document.body.style.overflowY = 'hidden';
-        document.body.append(coverDiv);
-    },
-
-    //Убираем фон
-    hideCover: function () {
-        document.getElementById('cover-div').remove();
-        document.body.style.overflowY = '';
-    },
+    
     },
     
 }
@@ -307,37 +267,4 @@ input[type="submit"]:enabled {
     font-family: 'Open Sans', sans-serif;
     border: none;
 }
-
-#modal {
-    position: fixed;
-    z-index: 9999;
-    background-color: white;
-    padding: 10px;
-    top: var(--modal-top);
-    left: var(--modal-left);
-    display: none;
-}
-
-#cover-div {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9000;
-    width: 100%;
-    height: 100%;
-    background-color: gray;
-    opacity: 0.3;
-  }
-
-#remove-button {
-    position: absolute;
-    font-size: 110%;
-    top: 10px;
-    right: 10px;
-    display: block;
-    width: 24px;
-    height: 24px;
-    border: none;
-    background: transparent;
-  }
 </style>
