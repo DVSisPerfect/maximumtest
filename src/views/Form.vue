@@ -2,40 +2,104 @@
   <div class="container"> 
         <h1 class="header">Форма подачи заявки в отдел сервиса и качества</h1>
         <div class="formContainer">
-            <form @submit="submitForm" id="rnd">
+            <form 
+                id="rnd"
+                @submit="submitForm"                
+            >
                 <div class="formBlock">
                     <span class="formHeader mustHave">Ваш филиал</span>
                     <div class="selectCity">
-                        <select class="selectInput" id="selectInput" v-model="selectInput" :disabled='disabledCity' @click="checkForm()">
-                            <option disabled value='' hidden>Выберите свой город</option>
-                            <option v-for="city in cities" v-bind:key="city.id">{{city.title}}</option>
+                        <select 
+                            class="selectInput" 
+                            id="selectInput" 
+                            v-model="selectInput" 
+                            :disabled='disabledCity' 
+                            @click="checkForm()"
+                        >
+                            <option 
+                                disabled 
+                                value='' 
+                                hidden
+                            >
+                                Выберите свой город
+                            </option>
+                            <option 
+                                v-for="city in cities" 
+                                :key="city.id"
+                            >
+                            {{city.title}}
+                            </option>
                         </select>
                     </div>
                     <div>
-                        <input class="checkOnline" type="checkbox" id="online" v-model="online" @click="disableCity();checkForm()">
+                        <input 
+                        type="checkbox" 
+                        class="checkOnline"                        
+                        id="online" 
+                        v-model="online"
+                        @click="disableCity();checkForm()">
                         <label for="online">Онлайн</label>
                     </div>
                 </div>
                 <div class="formBlock">
                     <span class="formHeader mustHave">Тема обращения</span>
-                    <div class="radioBlock" v-for="button in radioButtons" :key="button.value">
-                        <input class="radioInput" type="radio" :value="button.value" v-model="radioButt" @change="checkForm()" @click="clearTheme()">
+                    <div 
+                        class="radioBlock" 
+                        v-for="button in radioButtons" 
+                        :key="button.value"
+                    >
+                        <input 
+                            type="radio"
+                            class="radioInput"                             
+                            :id="button.value" 
+                            :value="button.value" 
+                            v-model="radioButt" 
+                            @change="checkForm()"
+                            @click="clearTheme()"
+                        >
                         <label :for="button.value">{{button.text}}</label>
                     </div>                   
-                    <input class="textInput textRadio" type="text" v-model="otherTheme"  placeholder="Другое" @keyup="checkForm();clearRadio()">
+                    <input 
+                        type="text" 
+                        class="textInput textRadio"                        
+                        placeholder="Другое" 
+                        v-model="otherTheme"                        
+                        @input="checkForm();clearRadio()"
+                    >
                 </div>
                 <div class="formBlock">
                     <span class="formHeader mustHave">Описание проблемы</span>
-                    <textarea class="textInput textArea" v-model="problem" placeholder="Введите текст" @keyup="checkForm()"></textarea>
+                    <textarea 
+                        class="textInput textArea" 
+                        placeholder="Введите текст"
+                        v-model="problem"                        
+                        @input="checkForm()"
+                    >
+                    </textarea>
                 </div>
                 <div class="formBlock">
                     <span class="formHeader">Загрузка документов</span>
-                    <p class="fileBlock" v-html="message">
+                    <p 
+                        class="fileBlock" 
+                        v-html="message"
+                    >
                     </p>
-                    <input type="file" id="fileUpload" name="fileUpload" placeholder="Выберите файл">
+                    <input 
+                        type="file" 
+                        id="fileUpload" 
+                        name="fileUpload" 
+                        placeholder="Выберите файл"
+                    >
                 </div>
                 <div class="formBlock">
-                    <input class="button" type="submit" id="submit" name="submit" placeholder="Отправить" :disabled='disabledSub'>
+                    <input 
+                        type="submit" 
+                        class="button"                        
+                        id="submit" 
+                        name="submit" 
+                        placeholder="Отправить" 
+                        :disabled='disabledSub'
+                    >
                 </div>
             </form>
         </div>

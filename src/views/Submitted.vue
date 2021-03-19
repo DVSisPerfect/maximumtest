@@ -1,7 +1,7 @@
 <template>
   <div class="submitted">
-    <div id="modal" :style="cssVars">
-      <img src="../assets/success_img.png" ref="img">
+    <div id="modal">
+      <img src="../assets/success_img.png">
       <button id="remove-button" @click="goBack">X</button>
     </div>
     <div id="cover-div"></div>
@@ -12,54 +12,33 @@
 export default {
   name: 'Submitted',
 
-data: function () {
-  return {
-    height: '',
-  }
-},
-
-computed: {
-    cssVars() {
-      return {
-        '--modal-top': window.innerHeight/2 - 75 + 'px',
-        '--modal-left': window.innerWidth/2 - 125 + 'px'
-      }
-    }
-  },
-
-mounted: function () {
-  this.$nextTick(function () {
-    this.matchHeight();
-    alert(this.height)
-  })
-},
-
 methods: {
   goBack: function () {
     this.$router.go(-1)
   },
   
-  matchHeight () {
-   this.height = this.$refs.img.clientHeight;
- }
-}
+  }
 }
 </script>
 
 <style>
 .submitted {
-    width: 1000px;
-    margin: 0px 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9000;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #modal {
     position: fixed;
     z-index: 9999;
     background-color: white;
-    padding: 10px;
-    top: var(--modal-top);
-    left: var(--modal-left);
-    
+    padding: 10px;    
 }
 
 #cover-div {
