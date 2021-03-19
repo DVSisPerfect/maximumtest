@@ -7,14 +7,14 @@
                 @submit="submitForm"                
             >
                 <div class="formBlock">
-                    <span class="formHeader mustHave">Ваш филиал</span>
-                    <div class="selectCity">
+                    <span class="formHeader required">Ваш филиал</span>
+                    <div class="cityBlock">
                         <select 
-                            class="selectInput" 
-                            id="selectInput" 
-                            v-model="selectInput" 
-                            :disabled='disabledCity' 
-                            @click="checkForm()"
+                            class="citySelected" 
+                            id="citySelected" 
+                            v-model="citySelected" 
+                            :disabled='cityDisabled' 
+                            @click="formCheck()"
                         >
                             <option 
                                 disabled 
@@ -26,6 +26,7 @@
                             <option 
                                 v-for="city in cities" 
                                 :key="city.id"
+                                :value="city.title"
                             >
                             {{city.title}}
                             </option>
@@ -34,18 +35,18 @@
                     <div>
                         <input 
                         type="checkbox" 
-                        class="checkOnline"                        
+                        class="online"                        
                         id="online" 
                         v-model="online"
-                        @click="disableCity();checkForm()">
+                        @click="cityDisable();formCheck()">
                         <label for="online">Онлайн</label>
                     </div>
                 </div>
                 <div class="formBlock">
-                    <span class="formHeader mustHave">Тема обращения</span>
+                    <span class="formHeader required">Тема обращения</span>
                     <div 
                         class="radioBlock" 
-                        v-for="button in radioButtons" 
+                        v-for="button in radioBtns" 
                         :key="button.value"
                     >
                         <input 
@@ -53,9 +54,9 @@
                             class="radioInput"                             
                             :id="button.value" 
                             :value="button.value" 
-                            v-model="radioButt" 
-                            @change="checkForm()"
-                            @click="clearTheme()"
+                            v-model="radioSelected" 
+                            @change="formCheck()"
+                            @click="themeClear()"
                         >
                         <label :for="button.value">{{button.text}}</label>
                     </div>                   
@@ -64,16 +65,16 @@
                         class="textInput textRadio"                        
                         placeholder="Другое" 
                         v-model="otherTheme"                        
-                        @input="checkForm();clearRadio()"
+                        @input="formCheck();radioClear()"
                     >
                 </div>
                 <div class="formBlock">
-                    <span class="formHeader mustHave">Описание проблемы</span>
+                    <span class="formHeader required">Описание проблемы</span>
                     <textarea 
                         class="textInput textArea" 
                         placeholder="Введите текст"
                         v-model="problem"                        
-                        @input="checkForm()"
+                        @input="formCheck()"
                     >
                     </textarea>
                 </div>
@@ -98,7 +99,7 @@
                         id="submit" 
                         name="submit" 
                         placeholder="Отправить" 
-                        :disabled='disabledSub'
+                        :disabled='submitDisabled'
                     >
                 </div>
             </form>
@@ -114,20 +115,20 @@ export default {
   data: function() {
       return {
         cities: [],
-        disabledCity: false,
-        selectInput: '',
+        cityDisabled: false,
+        citySelected: '',
         online: '',
-        radioButt: '',
-        radioButtons: [
+        radioSelected: '',
+        radioBtns: [
             {value: 'badService', text: 'Недоволен качеством услуг'},
             {value: 'termination', text: 'Расторжение договора'},
-            {value: 'noLetter', text: 'Не приходит письмо активации на почту'},
-            {value: 'noCab', text: 'Не работает личный кабинет'},
+            {value: 'noActivation', text: 'Не приходит письмо активации на почту'},
+            {value: 'noLMS', text: 'Не работает личный кабинет'},
         ],
         otherTheme: '',
         problem: '',
         message: "Приложите, пожалуйста, экранный скриншот<br>Это поможет быстрее решить проблему.",
-        disabledSub: true,
+        submitDisabled: true,
       }
   },
 
@@ -146,36 +147,35 @@ export default {
 
   methods: {
     //Выкл выбор города
-    disableCity : function () {
-        this.selectInput = '';
-        this.disabledCity = !this.disabledCity;
+    cityDisable : function () {
+        this.citySelected = '';
+        this.cityDisabled = !this.cityDisabled;
     },
     
     //Очищаем поле темы (при выборе радио-кнопки)
-    clearTheme: function () {
+    themeClear: function () {
         this.otherTheme = '';
-    },
-
-    //Очищаем радио-кнопки
-    clearButt: function () {
-        this.radioButt = '';
     },
     
     //Очищаем радио-кнопки при заполнении поля
-    clearRadio: function () {
+    radioClear: function () {
         if (this.otherTheme != '') {
-            this.radioButt = '';
+            this.radioSelected = '';
         }
     },
     
     //Валидация формы
-    checkForm: function () {
-        if ((this.selectInput !== '' || this.disabledCity == true) &&
-            (this.otherTheme !== '' || this.radioButt !== '') &&
+    formCheck: function () {
+        if ((this.citySelected !== '' || this.cityDisabled == true) &&
+            (this.otherTheme !== '' || this.radioSelected !== '') &&
             this.problem !== '') {
-                this.disabledSub = false;
+                this.submitDisabled = false;
+                alert(this.citySelected || this.cityDisabled);
+                alert(this.otherTheme || this.radioSelected);
+                alert(this.problem)
+                
             } else {
-                this.disabledSub = true;
+                this.submitDisabled = true;
             }
     },
 
@@ -189,13 +189,13 @@ export default {
         });
         let result = await response.json();
         if (result.success) {
-            this.selectInput = '';
-            this.disabledCity = false;
+            this.citySelected = '';
+            this.cityDisabled = false;
             this.online = '';
-            this.radioButt = '';
+            this.radioSelected = '';
             this.otherTheme = '';
             this.problem = "";
-            this.disabledSub = true;
+            this.submitDisabled = true;
             this.show = true;
             this.$router.push('submitted');
         } else {
@@ -244,16 +244,16 @@ export default {
     margin-bottom: 10px;
 }
 
-.selectCity {
+.cityBlock {
     margin-bottom: 10px;
 }
 
-.selectInput {
+.citySelected {
     padding: 5px 10px;
     width: 200px;
     border: 1px solid rgb(200, 200, 200);
 }
-.checkOnline {
+.online {
     margin-right: 5px;
     width: 20px;
     height: 20px;
@@ -299,7 +299,7 @@ label {
     vertical-align: middle;
 }
 
-.mustHave::after {
+.required::after {
     content: " *";
     color: red;
 }
