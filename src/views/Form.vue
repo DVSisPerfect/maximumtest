@@ -115,6 +115,7 @@ export default {
     padding: 5px 10px;
     width: 200px;
     border: 1px solid rgb(200, 200, 200);
+    background-color: white;
 }
 .online {
     margin-right: 5px;
