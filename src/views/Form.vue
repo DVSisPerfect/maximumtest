@@ -7,56 +7,9 @@
                 @submit="formSubmit"                
             >
                 <CityBlock/>
-                <div class="formBlock">
-                    <span class="formHeader required">Тема обращения</span>
-                    <div 
-                        class="radioBlock" 
-                        v-for="button in radioBtns" 
-                        :key="button.value"
-                    >
-                        <input
-                            type="radio"
-                            class="radioInput"                             
-                            :id="button.value" 
-                            :value="button.value" 
-                            v-model="radioSelected" 
-                            @change="formCheck()"
-                            @click="themeClear()"
-                        >
-                        <label :for="button.value">{{button.text}}</label>
-                    </div>                   
-                    <input 
-                        type="text" 
-                        class="textInput textRadio"                        
-                        placeholder="Другое" 
-                        v-model="otherTheme"                        
-                        @input="formCheck();radioClear()"
-                    >
-                </div>
-                <div class="formBlock">
-                    <span class="formHeader required">Описание проблемы</span>
-                    <textarea 
-                        class="textInput textArea" 
-                        placeholder="Введите текст"
-                        v-model="problem"                        
-                        @input="formCheck()"
-                    >
-                    </textarea>
-                </div>
-                <div class="formBlock">
-                    <span class="formHeader">Загрузка документов</span>
-                    <p 
-                        class="fileBlock" 
-                        v-html="message"
-                    >
-                    </p>
-                    <input 
-                        type="file" 
-                        id="fileUpload" 
-                        name="fileUpload" 
-                        placeholder="Выберите файл"
-                    >
-                </div>
+                <ThemeBlock/>
+                <ProblemBlock/>
+                <UploadBlock/>
                 <div class="formBlock">
                     <input 
                         type="submit" 
@@ -74,69 +27,22 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import CityBlock from './CityBlock.vue';
+import CityBlock from '../components/CityBlock.vue';
+import ThemeBlock from '../components/ThemeBlock.vue';
+import ProblemBlock from '../components/ProblemBlock.vue';
+import UploadBlock from '../components/UploadBlock.vue';
 /* eslint-disable */
 export default {
-  components: { CityBlock },
+  components: { CityBlock, ThemeBlock, ProblemBlock, UploadBlock},
+  
   name: 'Form',
-  data: function() {
-      return {
-                      
-        radioBtns: [
-            {value: 'badService', text: 'Недоволен качеством услуг'},
-            {value: 'termination', text: 'Расторжение договора'},
-            {value: 'noActivation', text: 'Не приходит письмо активации на почту'},
-            {value: 'noLMS', text: 'Не работает личный кабинет'},
-        ],        
-        message: "Приложите, пожалуйста, экранный скриншот<br>Это поможет быстрее решить проблему.",        
-      }
-  },
 
   computed: {
-      ...mapState(['cityDisabled', 'submitDisabled']),
-      
-      radioSelected: {
-          get () {
-                return this.$store.state.radioSelected
-            },
-            set (value) {
-                this.$store.commit('setRadio', value)
-            }
-      },
-      otherTheme: {
-            get () {
-                return this.$store.state.otherTheme
-            },
-            set (value) {
-                this.$store.commit('setTheme', value)
-            }
-        },
-      problem: {
-            get () {
-                return this.$store.state.problem
-            },
-            set (value) {
-                this.$store.commit('setProblem', value)
-            }
-      },
-  },
-
-  //Запрашиваем города
-  created: function() {
-        var vm = this;
-        fetch("https://60254fac36244d001797bfe8.mockapi.io/api/v1/city")
-        .then(function(response) {
-            return response.json();
-            })
-        .then(function(data) {
-            vm.cities = data;
-            })
-        
-  },
+      ...mapState(['submitDisabled']),     
+  },       
 
   methods: {
-
-    ...mapActions(['cityDisable', 'themeClear', 'radioClear', 'formCheck', 'formClear']),
+    ...mapActions(['formCheck', 'formClear']),
     
     formSubmit: async function (e) {
         e.preventDefault();
