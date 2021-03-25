@@ -42,7 +42,7 @@ export default {
   },       
 
   methods: {
-    ...mapActions(['formCheck', 'formClear']),
+    ...mapActions(['formClear']),
     
     formSubmit: async function (e) {
         e.preventDefault();
