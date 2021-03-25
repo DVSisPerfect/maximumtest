@@ -4,44 +4,9 @@
         <div class="formContainer">
             <form 
                 id="rnd"
-                @submit="submitForm"                
+                @submit="formSubmit"                
             >
-                <div class="formBlock">
-                    <span class="formHeader required">Ваш филиал</span>
-                    <div class="cityBlock">
-                        <select 
-                            class="citySelected" 
-                            id="citySelected" 
-                            v-model="citySelected" 
-                            :disabled='cityDisabled' 
-                            @click="formCheck()"
-                        >
-                            <option 
-                                disabled 
-                                value='' 
-                                hidden
-                            >
-                                Выберите свой город
-                            </option>
-                            <option 
-                                v-for="city in cities" 
-                                :key="city.id"
-                                :value="city.title"
-                            >
-                            {{city.title}}
-                            </option>
-                        </select>
-                    </div>
-                    <div>
-                        <input 
-                        type="checkbox" 
-                        class="online"                        
-                        id="online" 
-                        v-model="online"
-                        @click="cityDisable();formCheck()">
-                        <label for="online">Онлайн</label>
-                    </div>
-                </div>
+                <CityBlock/>
                 <div class="formBlock">
                     <span class="formHeader required">Тема обращения</span>
                     <div 
@@ -49,7 +14,7 @@
                         v-for="button in radioBtns" 
                         :key="button.value"
                     >
-                        <input 
+                        <input
                             type="radio"
                             class="radioInput"                             
                             :id="button.value" 
@@ -108,28 +73,52 @@
 </template>
 
 <script>
-
+import { mapState, mapActions } from 'vuex';
+import CityBlock from './CityBlock.vue';
 /* eslint-disable */
 export default {
+  components: { CityBlock },
   name: 'Form',
   data: function() {
       return {
-        cities: [],
-        cityDisabled: false,
-        citySelected: '',
-        online: '',
-        radioSelected: '',
+                      
         radioBtns: [
             {value: 'badService', text: 'Недоволен качеством услуг'},
             {value: 'termination', text: 'Расторжение договора'},
             {value: 'noActivation', text: 'Не приходит письмо активации на почту'},
             {value: 'noLMS', text: 'Не работает личный кабинет'},
-        ],
-        otherTheme: '',
-        problem: '',
-        message: "Приложите, пожалуйста, экранный скриншот<br>Это поможет быстрее решить проблему.",
-        submitDisabled: true,
+        ],        
+        message: "Приложите, пожалуйста, экранный скриншот<br>Это поможет быстрее решить проблему.",        
       }
+  },
+
+  computed: {
+      ...mapState(['cityDisabled', 'submitDisabled']),
+      
+      radioSelected: {
+          get () {
+                return this.$store.state.radioSelected
+            },
+            set (value) {
+                this.$store.commit('setRadio', value)
+            }
+      },
+      otherTheme: {
+            get () {
+                return this.$store.state.otherTheme
+            },
+            set (value) {
+                this.$store.commit('setTheme', value)
+            }
+        },
+      problem: {
+            get () {
+                return this.$store.state.problem
+            },
+            set (value) {
+                this.$store.commit('setProblem', value)
+            }
+      },
   },
 
   //Запрашиваем города
@@ -146,42 +135,10 @@ export default {
   },
 
   methods: {
-    //Выкл выбор города
-    cityDisable : function () {
-        this.citySelected = '';
-        this.cityDisabled = !this.cityDisabled;
-    },
-    
-    //Очищаем поле темы (при выборе радио-кнопки)
-    themeClear: function () {
-        this.otherTheme = '';
-    },
-    
-    //Очищаем радио-кнопки при заполнении поля
-    radioClear: function () {
-        if (this.otherTheme != '') {
-            this.radioSelected = '';
-        }
-    },
-    
-    //Валидация формы
-    formCheck: function () {
-        if ((this.citySelected !== '' || this.cityDisabled == true) &&
-            (this.otherTheme !== '' || this.radioSelected !== '') &&
-            this.problem !== '') {
-                this.submitDisabled = false;
-                alert(this.citySelected || this.cityDisabled);
-                alert(this.otherTheme || this.radioSelected);
-                alert(this.problem)
-                
-            } else {
-                this.submitDisabled = true;
-            }
-    },
 
-    //Отправка формы
+    ...mapActions(['cityDisable', 'themeClear', 'radioClear', 'formCheck', 'formClear']),
     
-    submitForm: async function (e) {
+    formSubmit: async function (e) {
         e.preventDefault();
         let response = await fetch('https://60254fac36244d001797bfe8.mockapi.io/api/v1/send-form', {
         method: 'POST',
