@@ -52,14 +52,7 @@ export default {
         });
         let result = await response.json();
         if (result.success) {
-            this.citySelected = '';
-            this.cityDisabled = false;
-            this.online = '';
-            this.radioSelected = '';
-            this.otherTheme = '';
-            this.problem = "";
-            this.submitDisabled = true;
-            this.show = true;
+            this.formClear();
             this.$router.push('submitted');
         } else {
             alert("Ошибка отправки заявки");

@@ -46,12 +46,19 @@ export default new Vuex.Store({
             (state.otherTheme !== '' || state.radioSelected !== '') &&
             state.problem !== '') {
                 state.submitDisabled = false;
-                
             } else {
                 state.submitDisabled = true;
             }
-      
-    },
+      },
+      formClear (state) {
+            state.citySelected = '';
+            state.cityDisabled = false;
+            state.online = false;
+            state.radioSelected = '';
+            state.otherTheme = '';
+            state.problem = '';
+            state.submitDisabled = true;
+      }
     },
     actions: {
       cityDisable ({ commit }) {
@@ -65,6 +72,9 @@ export default new Vuex.Store({
       },
       formCheck ({ commit }) {
         commit('formCheck');
+      },
+      formClear ({ commit }) {
+        commit('formClear');
       }
     }
 });
