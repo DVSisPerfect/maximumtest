@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Form from '../views/Form.vue'
+import ServiceForm from '../views/ServiceForm.vue'
 import Submitted from '../views/Submitted.vue'
 
 Vue.use(VueRouter)
@@ -8,8 +8,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Form',
-    component: Form
+    name: 'ServiceForm',
+    component: ServiceForm
   },
   {
     path: '/submitted',

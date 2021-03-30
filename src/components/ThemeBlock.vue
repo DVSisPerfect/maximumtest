@@ -10,29 +10,41 @@
                 type="radio"
                 class="radioInput"                             
                 :id="button.value" 
-                :value="button.value" 
-                v-model="radioSelected" 
-                @change="formCheck()"
+                :value="button.value"
+                v-model="themeValue.radio"
                 @click="themeClear()"
             >
             <label :for="button.value">{{button.text}}</label>
-        </div>                   
+        </div>              
         <input 
             type="text" 
             class="textInput textRadio"                        
             placeholder="Другое" 
-            v-model="otherTheme"                        
-            @input="formCheck();radioClear()"
+            v-model="themeValue.theme"
+            @input="radioClear()"
         >
     </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
 /* eslint-disable */
 export default {
     name: 'ThemeBlock',
-   
+    
+    model: {
+        prop: 'themeValue'
+    },
+
+    props: {
+        themeValue: Object
+    },
+
+    watch: {
+        themeValue () {
+            this.$emit('input', this.themeValue)
+        }
+    },
+
     data: function() {
         return {                      
             radioBtns: [
@@ -44,29 +56,17 @@ export default {
     }
     },
     
-    computed: {
-      ...mapState([]),
-      
-        radioSelected: {
-            get () {
-                    return this.$store.state.radioSelected
-                },
-                set (value) {
-                    this.$store.commit('setRadio', value)
-                }
-        },
-        otherTheme: {
-                get () {
-                    return this.$store.state.otherTheme
-                },
-                set (value) {
-                    this.$store.commit('setTheme', value)
-                }
-            },
-    },
-    
     methods: {
-        ...mapActions(['themeClear', 'radioClear', 'formCheck']),
+        
+        themeClear: function() {
+            this.themeValue.theme = '';
+        },
+
+        radioClear: function() {
+            if (this.themeValue.theme != '') {
+                this.themeValue.radio = ''
+            }
+        }
     }
 }
 </script>

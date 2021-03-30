@@ -6,9 +6,9 @@
                 id="rnd"
                 @submit="formSubmit"                
             >
-                <CityBlock/>
-                <ThemeBlock/>
-                <ProblemBlock/>
+                <CityBlock v-model="cityValue"  />
+                <ThemeBlock v-model="themeValue"  />
+                <ProblemBlock v-model="problemValue"  />
                 <UploadBlock/>
                 <div class="formBlock">
                     <input 
@@ -26,39 +26,77 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
 import CityBlock from '../components/CityBlock.vue';
 import ThemeBlock from '../components/ThemeBlock.vue';
 import ProblemBlock from '../components/ProblemBlock.vue';
 import UploadBlock from '../components/UploadBlock.vue';
 /* eslint-disable */
 export default {
-  components: { CityBlock, ThemeBlock, ProblemBlock, UploadBlock},
-  
-  name: 'Form',
-
-  computed: {
-      ...mapState(['submitDisabled']),     
-  },       
-
-  methods: {
-    ...mapActions(['formClear']),
+    components: { CityBlock, ThemeBlock, ProblemBlock, UploadBlock},
     
-    formSubmit: async function (e) {
-        e.preventDefault();
-        let response = await fetch('https://60254fac36244d001797bfe8.mockapi.io/api/v1/send-form', {
-        method: 'POST',
-        body: new FormData(document.getElementById('rnd'))
-        });
-        let result = await response.json();
-        if (result.success) {
-            this.formClear();
-            this.$router.push('submitted');
-        } else {
-            alert("Ошибка отправки заявки");
+    name: 'Form',
+
+    data: function () {
+        return {     
+            cityValue: {
+                selected: '',
+                disabled: false,
+                online: false
+            },     
+            themeValue: {
+                radio: '',
+                theme: '',
+            },
+            problemValue: '',
+            submitDisabled: true
         }
     },
-    
+
+    watch: {
+        cityValue () {
+            this.formCheck();
+        }
+    },
+
+    methods: {
+        hello () {
+            alert('dfgdfg')
+        },
+        formClear: function () {
+            this.cityValue.selected = '';
+            this.cityValue.disabled = false;
+            this.cityValue.online = false;
+            this.themeValue.radio = '';
+            this.themeValue.theme = '';
+            this.problemValue = '';
+            this.submitDisabled = true;
+        },
+        
+        formCheck: function () {
+            if ((this.cityValue.online = true || this.cityValue.selected !== '') &&
+                (this.themeValue.radio !== '' || this.themeValue.theme !== '') &&
+                this.problemValue !== '') {
+                    this.submitDisabled = false;
+                } else {
+                    this.submitDisabled = true;
+                }
+        },
+
+        formSubmit: async function (e) {
+            e.preventDefault();
+            let response = await fetch('https://60254fac36244d001797bfe8.mockapi.io/api/v1/send-form', {
+            method: 'POST',
+            body: new FormData(document.getElementById('rnd'))
+            });
+            let result = await response.json();
+            if (result.success) {
+                this.formClear();
+                this.$router.push('submitted');
+            } else {
+                alert("Ошибка отправки заявки");
+            }
+        },
+        
     },
     
 }

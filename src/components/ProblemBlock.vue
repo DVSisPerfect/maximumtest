@@ -4,33 +4,30 @@
         <textarea 
             class="textInput textArea" 
             placeholder="Введите текст"
-            v-model="problem"                        
-            @input="formCheck()"
+            v-model="problemValue"
         >
         </textarea>
     </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+
 export default {
     name: 'ProblemBlock',
-    
-    computed: {
-      ...mapState([]),
-      problem: {
-            get () {
-                return this.$store.state.problem
-            },
-            set (value) {
-                this.$store.commit('setProblem', value)
-            }
-      },
+
+    model: {
+        prop: 'problemValue'
+    },
+
+    props: {
+        problemValue: String
     },
     
-    methods: {
-    ...mapActions(['formCheck']),
-    }
+    watch: {
+        problemValue () {
+            this.$emit('input', this.problemValue)
+        }
+    },
 }
 </script>
 

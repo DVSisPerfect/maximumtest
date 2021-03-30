@@ -5,9 +5,8 @@
             <select 
                 class="citySelected" 
                 id="citySelected" 
-                v-model="citySelected" 
-                :disabled="cityDisabled"
-                @click="formCheck()"
+                v-model="cityValue.selected" 
+                :disabled="cityValue.disabled"
             >
                 <option 
                     disabled 
@@ -29,46 +28,39 @@
             <input 
             type="checkbox" 
             class="online"                        
-            id="online" 
-            v-model="online"
-            @click="cityDisable();formCheck()">
+            id="online"
+            v-model="cityValue.online"
+            @click="cityDisable()">
             <label for="online">Онлайн</label>
         </div>
     </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
 /* eslint-disable */
 export default {
     name: 'CityBlock',
     
-    data: function() {
-        return {
-            cities: [],
+    model: {
+        prop: 'cityValue'
+    },
+
+    props: {
+        cityValue: Object
+    },
+
+    watch: {
+        cityValue () {
+            this.$emit('input', this.cityValue)
         }
     },
 
-    computed: {
-        ...mapState(['cityDisabled']),
-        citySelected: {
-            get () {
-                    return this.$store.state.citySelected
-                },
-                set (value) {
-                    this.$store.commit('setCity', value)
-                }
-            },
-            online: {
-                get () {
-                    return this.$store.state.online
-                },
-                set (value) {
-                    this.$store.commit('setOnline', value)
-                }
-      },
+    data: function() {
+        return {
+            cities: []
+        }
     },
-    
+
     created: function() {
         var vm = this;
         fetch("https://60254fac36244d001797bfe8.mockapi.io/api/v1/city")
@@ -81,7 +73,10 @@ export default {
     },
 
     methods: {
-        ...mapActions(['cityDisable', 'formCheck'])
+        cityDisable: function () {
+            this.cityValue.disabled = !this.cityValue.disabled;
+            this.cityValue.selected = ''
+        }
     }
 }
 </script>
