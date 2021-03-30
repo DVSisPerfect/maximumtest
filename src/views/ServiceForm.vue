@@ -52,16 +52,8 @@ export default {
         }
     },
 
-    watch: {
-        cityValue () {
-            this.formCheck();
-        }
-    },
-
     methods: {
-        hello () {
-            alert('dfgdfg')
-        },
+       
         formClear: function () {
             this.cityValue.selected = '';
             this.cityValue.disabled = false;
